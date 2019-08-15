@@ -1,6 +1,11 @@
 package main
 
-import "math/big"
+import (
+	"bytes"
+	"crypto/sha256"
+	"fmt"
+	"math/big"
+)
 
 type ProofofWork struct {
 	//a、block
@@ -30,7 +35,40 @@ func NewProofofWork(block *Block) *ProofofWork {
 
 //3、提供不断计算hash的函数
 func (pow *ProofofWork)Run() ([]byte,uint64) {
-	return []byte("HelloWorld"),10
+	block:=pow.block
+	var nonce uint64
+	var hash [32]byte
+	//1、拼装数据(区块的数据，还有不断变化的随机数)
+	tmp:=[][]byte{
+		Uint64ToByte(block.Version),
+		block.PrvHash,
+		block.MerkelRoot,
+		Uint64ToByte(block.TimeStamp),
+		Uint64ToByte(block.Difficulty),
+		Uint64ToByte(nonce),
+		block.Data,
+	}
+
+	blockInfo := bytes.Join(tmp, []byte{})
+	//2、做哈希运算
+	hash = sha256.Sum256(blockInfo)
+	//3、与pow中的target进行比较
+	tmpInt:=big.Int{}
+	tmpInt.SetBytes(hash[:])
+
+	if tmpInt.Cmp(pow.target)==-1{
+		//a、找到了。退出返回
+		fmt.Printf("挖矿成功 hash=%x\n nonce=%d\n",hash,nonce)
+		return nil, 0
+	}else {
+		//b、没找到，继续找，随机数加1
+		nonce++
+	}
+
+
+
+	//return []byte("HelloWorld"),10
+	return hash[:],nonce
 
 }
 
