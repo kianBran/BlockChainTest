@@ -1,8 +1,8 @@
-package proofofwork
+package main
 
 import "math/big"
 
-type proofofwork struct {
+type ProofofWork struct {
 	//a、block
 	block*Block
 	//b、目標值
@@ -12,7 +12,7 @@ type proofofwork struct {
 
 //提供創建pow的函數
 func NewProofofWork(block *Block) *ProofofWork {
-	pow:=proofofwork{
+	pow:=ProofofWork{
 		block:block,
 	}
 
@@ -26,5 +26,11 @@ func NewProofofWork(block *Block) *ProofofWork {
 
 	pow.target=&tmpInt
 	return &pow
+}
+
+//3、提供不断计算hash的函数
+func (pow *ProofofWork)Run() ([]byte,uint64) {
+	return []byte("HelloWorld"),10
+
 }
 

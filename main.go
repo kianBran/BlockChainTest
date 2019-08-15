@@ -1,4 +1,4 @@
-package proofofwork
+package main
 
 import "fmt"
 

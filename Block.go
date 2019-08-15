@@ -1,4 +1,4 @@
-package proofofwork
+package main
 
 import (
 	"bytes"
@@ -51,7 +51,15 @@ func NewBlock(data string, preBlockHash []byte) *Block {
 		Hash:       []byte{},
 		Data:       []byte(data),
 	}
-	block.SetHash()
+	//block.SetHash()
+	//创建一个pow对象
+	pow:=NewProofofWork(&block)
+	//查找随机数，不停地进行哈希运算
+	hash,nonce:=pow.Run()
+
+	//根据挖矿结果对区块数据进行更行
+	block.Hash=hash
+	block.Nonce=nonce
 	return &block
 }
 
