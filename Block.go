@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"encoding/binary"
+	"log"
 	"time"
 )
 
@@ -28,7 +31,12 @@ type Block struct {
 
 //實現一個輔助函數，功能是將uint64轉成[]byte
 func Uint64ToByte(num uint64) []byte {
-	return []byte{}
+	var buffer bytes.Buffer
+	err := binary.Write(&buffer, binary.BigEndian, num)
+	if err!=nil{
+		log.Panic(err)
+	}
+	return buffer.Bytes()
 }
 
 //創建區塊
@@ -49,7 +57,7 @@ func NewBlock(data string, preBlockHash []byte) *Block {
 
 //生成哈希
 func (block *Block) SetHash() {
-	var blockInfo []byte
+	/*var blockInfo []byte
 	//1、拼裝數據
 	blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
 	blockInfo = append(blockInfo, block.PrvHash...)
@@ -57,9 +65,19 @@ func (block *Block) SetHash() {
 	blockInfo = append(blockInfo, Uint64ToByte(block.TimeStamp)...)
 	blockInfo = append(blockInfo, Uint64ToByte(block.Difficulty)...)
 	blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
-	blockInfo = append(blockInfo, block.Data...)
+	blockInfo = append(blockInfo, block.Data...)*/
+	
+	tmp:=[][]byte{
+		Uint64ToByte(block.Version),
+		block.PrvHash,
+		block.MerkelRoot,
+		Uint64ToByte(block.TimeStamp),
+		Uint64ToByte(block.Difficulty),
+		Uint64ToByte(block.Nonce),
+		block.Data,
+	}
 
-
+	blockInfo := bytes.Join(tmp, []byte{})
 
 	//2、sha256哈希
 	hash := sha256.Sum256(blockInfo)
