@@ -31,7 +31,7 @@ func (bc *BlockChain)AddBlock(data string)  {
 	
 	//獲取最後一個區塊
 	lastBlock:=bc.blocks[len(bc.blocks)-1]
-	prvHash := lastBlock.PrvHash
+	prvHash := lastBlock.Hash
 
 	//創建新的區塊
 	block:= NewBlock(data,prvHash)

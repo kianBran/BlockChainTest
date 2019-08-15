@@ -2,35 +2,67 @@ package main
 
 import (
 	"crypto/sha256"
+	"time"
 )
 
 type Block struct {
-	//前區塊哈希
+	//1、版本號
+	Version uint64
+	//2、前區塊哈希
 	PrvHash []byte
-	//當前區塊哈希
+	//3、Merkel根
+	MerkelRoot []byte
+	//4、時間戳
+	TimeStamp uint64
+	//5、難度值
+	Difficulty uint64
+	//6、隨機數，挖礦要找的數據
+	Nonce uint64
+
+	//正常比特幣區塊中沒有當前區塊哈希，我們爲了方便自己定義
+	//a、當前區塊哈希
 	Hash []byte
-	//區塊數據
+	//b、區塊數據
 	Data []byte
 }
 
+//實現一個輔助函數，功能是將uint64轉成[]byte
+func Uint64ToByte(num uint64) []byte {
+	return []byte{}
+}
+
 //創建區塊
-func NewBlock(data string,preBlockHash []byte) *Block{
-	block:=Block{
-		PrvHash: preBlockHash,
-		Hash:    []byte{},
-		Data:    []byte(data),
+func NewBlock(data string, preBlockHash []byte) *Block {
+	block := Block{
+		Version:    00,
+		PrvHash:    preBlockHash,
+		MerkelRoot: []byte{},
+		TimeStamp:  uint64(time.Now().Unix()),
+		Difficulty: 0,
+		Nonce:      0,
+		Hash:       []byte{},
+		Data:       []byte(data),
 	}
 	block.SetHash()
 	return &block
 }
 
 //生成哈希
-func (block*Block) SetHash()  {
+func (block *Block) SetHash() {
+	var blockInfo []byte
 	//1、拼裝數據
-	blockInfo:=append(block.PrvHash,block.Data...)
+	blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
+	blockInfo = append(blockInfo, block.PrvHash...)
+	blockInfo = append(blockInfo, block.MerkelRoot...)
+	blockInfo = append(blockInfo, Uint64ToByte(block.TimeStamp)...)
+	blockInfo = append(blockInfo, Uint64ToByte(block.Difficulty)...)
+	blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
+	blockInfo = append(blockInfo, block.Data...)
+
+
+
 	//2、sha256哈希
 	hash := sha256.Sum256(blockInfo)
-	block.Hash=hash[:]
+	block.Hash = hash[:]
 
 }
-
