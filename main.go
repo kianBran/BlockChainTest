@@ -55,8 +55,25 @@ func GenesisBlock() *Block {
 	return NewBlock("這是一個創世區塊",[]byte{})
 }
 
+//5、添加區塊
+func (bc *BlockChain)AddBlock(data string)  {
+	//如何獲取前區塊哈希
+
+	//獲取最後一個區塊
+	lastBlock:=bc.blocks[len(bc.blocks)-1]
+	PrvHash := lastBlock.Hash
+
+	//a、創建新的區塊
+	block := NewBlock(data, PrvHash)
+	//b、添加到區塊鏈數組中
+	bc.blocks = append(bc.blocks, block)
+
+}
+
 func main()  {
 	bc:=NewBlockChain()
+	bc.AddBlock("這是我的第一個區塊")
+	bc.AddBlock("這是我的第二個區塊")
 	for i,block:=range bc.blocks{
 		fmt.Printf("=============當前區塊高度: %d===========\n",i)
 		fmt.Printf("前區塊哈希: %x\n",block.PrvHash)
