@@ -1,4 +1,4 @@
-package main
+package proofofwork
 
 import (
 	_ "crypto/sha256"
