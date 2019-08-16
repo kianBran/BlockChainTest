@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"crypto/sha256"
+	_ "crypto/sha256"
 	"encoding/binary"
 	"log"
 	"time"
@@ -64,7 +64,7 @@ func NewBlock(data string, preBlockHash []byte) *Block {
 }
 
 //生成哈希
-func (block *Block) SetHash() {
+/*func (block *Block) SetHash() {
 	/*var blockInfo []byte
 	//1、拼裝數據
 	blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
@@ -75,7 +75,7 @@ func (block *Block) SetHash() {
 	blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
 	blockInfo = append(blockInfo, block.Data...)*/
 	
-	tmp:=[][]byte{
+	/*tmp:=[][]byte{
 		Uint64ToByte(block.Version),
 		block.PrvHash,
 		block.MerkelRoot,
@@ -91,4 +91,4 @@ func (block *Block) SetHash() {
 	hash := sha256.Sum256(blockInfo)
 	block.Hash = hash[:]
 
-}
+}*/
