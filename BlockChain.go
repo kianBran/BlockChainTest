@@ -29,7 +29,7 @@ func NewBlockChain() *BlockChain  {
 	var lastHash []byte
 	//打開數據庫
 	db,err:=bolt.Open("BlockChainDB",0600,nil)
-	defer db.Close()
+	//defer db.Close()
 
 	if err!=nil{
 		log.Panic("打開數據庫失敗")
@@ -72,14 +72,36 @@ func GenesisBlock() *Block {
 //添加區塊
 func (bc *BlockChain)AddBlock(data string)  {
 	//如何獲取前區塊哈希
-	
-	/*//獲取最後一個區塊
-	lastBlock:=bc.blocks[len(bc.blocks)-1]
-	prvHash := lastBlock.Hash
+	db:=bc.db //区块链数据库
+	lasthash := bc.tail //最后一个区块的哈希
 
-	//創建新的區塊
-	block:= NewBlock(data,prvHash)
+	//獲取最後一個區塊数据
+	db.Update(func(tx *bolt.Tx) error {
+		//完成数据添加
+		bucket := tx.Bucket([]byte(BlockBucket))
+		if bucket==nil{
+			log.Panic("bucket不应该为空，请检查")
+		}
 
-	//添加到區塊鏈數組中
-	bc.blocks=append(bc.blocks,block)*/
+		//創建新的區塊
+		block := NewBlock(data, lasthash)
+
+		//添加到區塊鏈數組中
+		//hash作爲key，block字節流作爲value
+		bucket.Put(block.Hash,block.Serialize())
+		bucket.Put([]byte("LastHashKey"),block.Hash)
+
+		//更新内存中的lasthash
+		bc.tail=block.Hash
+		return nil
+	})
+
+
+
+
+
+
+
+
+
 }

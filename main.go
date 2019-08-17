@@ -9,6 +9,6 @@ func main()  {
 		fmt.Printf("前區塊哈希: %x\n",block.PrvHash)
 		fmt.Printf("當前區塊哈希: %x\n",block.Hash)
 		fmt.Printf("區塊數據: %s\n",block.Data)
-	}
-*/
+	}*/
+
 }
