@@ -4,6 +4,7 @@ import (
 	"bytes"
 	_ "crypto/sha256"
 	"encoding/binary"
+	"encoding/gob"
 	"log"
 	"time"
 )
@@ -62,9 +63,39 @@ func NewBlock(data string, preBlockHash []byte) *Block {
 	block.Nonce=nonce
 	return &block
 }
+//序列化
+func (block *Block)Serialize() []byte {
+	//编码的数据放到buffer中
+	var buffer bytes.Buffer
 
-func (block *Block)toByte() []byte {
-	return []byte{}
+	//使用gob进行序列化（编码）得到字节流
+	//1、定义一个编码器
+	//2、使用编码器进行编码
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(&block)
+	if err !=nil{
+		log.Panic("编码出错")
+	}
+	//fmt.Printf("编码后的小明：%x\n",buffer.Bytes())
+
+	return buffer.Bytes()
+}
+
+
+//反序列化
+func Deserialize(data []byte) Block {
+	//使用gob进行反序列化（解码）的得到person结构
+	//1、定义一个解码器
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+	//2、使用解码器进行解码
+	var block Block
+	err := decoder.Decode(&block)
+	if err!=nil{
+		log.Panic("解码失败")
+	}
+	//fmt.Printf("解码后的大明：%v\n",daming)
+	return block
+
 }
 
 //生成哈希

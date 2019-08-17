@@ -50,7 +50,7 @@ func NewBlockChain() *BlockChain  {
 
 			//寫數據
 			//hash作爲key，block字節流作爲value
-			bucket.Put(genesisBlock.Hash,genesisBlock.toByte())
+			bucket.Put(genesisBlock.Hash,genesisBlock.Serialize())
 			bucket.Put([]byte("LastHashKey"),genesisBlock.Hash)
 			lastHash=genesisBlock.Hash
 		}else {
