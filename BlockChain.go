@@ -100,8 +100,4 @@ func (bc *BlockChain)AddBlock(data string)  {
 
 
 
-
-
-
-
 }

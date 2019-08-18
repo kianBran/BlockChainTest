@@ -57,6 +57,11 @@ func (pow *ProofofWork)Run() ([]byte,uint64) {
 		tmpInt:=big.Int{}
 		tmpInt.SetBytes(hash[:])
 
+		// Cmp compares x and y and returns:
+		//
+		//   -1 if x <  y
+		//    0 if x == y
+		//   +1 if x >  y
 		if tmpInt.Cmp(pow.target)==-1{
 			//a、找到了。退出返回
 			fmt.Printf("挖矿成功! hash:%x,nonce:%d\n",hash,nonce)
