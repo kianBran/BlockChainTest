@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "crypto/sha256"
+	"fmt"
 	_ "fmt"
 	"github.com/boltdb/bolt"
 	"log"
@@ -102,3 +103,56 @@ func (bc *BlockChain)AddBlock(txs []*Transaction)  {
 
 
 }
+
+//找到指定地址的所有UTXO
+func (bc *BlockChain)FindUTXOs(address string) []TXOput {
+	var UTXO []TXOput
+	//定義一個map來保存消費過的output，key是這個output的交易ID，value是這個交易中索引的數組（多個交易）
+	//map[交易id][]int64
+	spentOutputs:=make(map[string][]int64)
+
+
+
+
+	//創建迭代器
+	it:=bc.NewIterator()
+
+	for{
+		//1、便利區塊
+		block:=it.Next()
+		//2、便利交易
+		for _,tx:=range block.Transactions{
+			fmt.Printf("current txid:%x\n",tx.TXID)
+			//3、遍歷output,找到和自己相關的utxo（在添加output之前檢查一下是否消耗過）
+			for i,output:=range tx.TXOutputs{
+				fmt.Printf("current i:%d\n",i)
+				//這個output和我們的目標地址相同，滿足條件，加到返回utxo數組中
+				if output.PubkeyHansh==address{
+					UTXO = append(UTXO, output)
+				}
+			}
+			//4、遍歷input，找到自己花費過的utxo集合（把自己消耗過得標示出來）
+			for _,input:=range tx.TXInputs{
+				//判斷一下當前這個input和目標（李四）是否一致，如果相同，如果相同，說明這個是李四消耗過的
+				if input.Sig==address{
+					//spentOutputs:=make(map[string][]int64)
+					indexArray:=spentOutputs[string(input.TXid)]
+					indexArray = append(indexArray, input.Index)
+				}
+			}
+
+
+		}
+
+
+
+
+
+		if len(block.PrvHash)==0{
+			break
+			fmt.Printf("區塊遍歷完成")
+		}
+	}
+	return UTXO
+}
+

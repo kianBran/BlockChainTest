@@ -35,17 +35,12 @@ func (cli*CLI) PrintBlockChain() {
 
 }
 
-//找到指定地址的所有UTXO
-func (block *BlockChain)FindUTXOs(address string) []TXOput  {
-	var UTXO []TXOput
-	return UTXO
-}
 
 func (cli *CLI)GetBalance(address string)  {
 	utxos:=cli.bc.FindUTXOs(address)
 	total:=0.0
 	for _,utxos:=range utxos{
-		total+=utxos.value
+		total+=utxos.Value
 	}
 	fmt.Printf("%s餘額爲：%f\n",address,total)
 }
