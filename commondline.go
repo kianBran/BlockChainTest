@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func (cli *CLI) AddBlock(data string)  {
-	cli.bc.AddBlock(data)
+	//cli.bc.AddBlock(txs)
 	fmt.Printf("添加区块链成功\n")
 
 }
@@ -24,7 +24,7 @@ func (cli*CLI) PrintBlockChain() {
 		fmt.Printf("难度值: %d\n", block.Difficulty)
 		fmt.Printf("随机数: %d\n", block.Nonce)
 		fmt.Printf("當前區塊哈希: %x\n", block.Hash)
-		fmt.Printf("區塊數據: %s\n", block.Data)
+		fmt.Printf("區塊數據: %s\n", block.Transactions[0].TXInputs[0].Sig)
 
 		if len(block.PrvHash) == 0 {
 			fmt.Printf("区块链遍历结束")
@@ -33,4 +33,19 @@ func (cli*CLI) PrintBlockChain() {
 
 	}
 
+}
+
+//找到指定地址的所有UTXO
+func (block *BlockChain)FindUTXOs(address string) []TXOput  {
+	var UTXO []TXOput
+	return UTXO
+}
+
+func (cli *CLI)GetBalance(address string)  {
+	utxos:=cli.bc.FindUTXOs(address)
+	total:=0.0
+	for _,utxos:=range utxos{
+		total+=utxos.value
+	}
+	fmt.Printf("%s餘額爲：%f\n",address,total)
 }

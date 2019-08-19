@@ -11,8 +11,10 @@ type CLI struct {
 }
 
 const Usage=`
-	addBlock --data DATA    "add data to blockChain"
-	printChain              "print all biockChain data"
+	addBlock --data DATA    "添加區塊"
+	printChain              "正向打印區塊鏈"
+	printChainR  "反向打印區塊鏈"
+	getBalance --address ADDRESS  "獲取指定地址的餘額"
 
 	`
 
@@ -51,6 +53,13 @@ func (cli *CLI)Run()  {
 		case "printChain":
 			fmt.Printf("//打印区块链\n")
 			cli.PrintBlockChain()
+
+		case "getBalance":
+			fmt.Printf("獲取餘額\n")
+			if len(args)==4 && args[2]=="--address"{
+				address:=args[3]
+				cli.GetBalance(address)
+			}
 
 
 	default:

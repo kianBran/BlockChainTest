@@ -47,8 +47,10 @@ func (pow *ProofofWork)Run() ([]byte,uint64) {
 			Uint64ToByte(block.TimeStamp),
 			Uint64ToByte(block.Difficulty),
 			Uint64ToByte(nonce),
-			block.Data,
+			//只對去塊頭做hash，區塊體通過Merkelroot產生影響
+			//block.Data,
 		}
+		block.MerkelRoot=block.MakeMerkelRoot()
 
 		blockInfo := bytes.Join(tmp, []byte{})
 		//2、做哈希运算

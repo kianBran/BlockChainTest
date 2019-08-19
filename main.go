@@ -1,7 +1,7 @@
 package main
 
 func main()  {
-	bc:= NewBlockChain()
+	bc:= NewBlockChain("kian")
 	cli:=CLI{bc}
 	cli.Run()
 	/*bc.AddBlock("這是我的第一個區塊")

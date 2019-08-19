@@ -19,7 +19,7 @@ const BlockChainDB="blockChain.db"
 const BlockBucket="blockBucket"
 
 //定義一個區塊鏈
-func NewBlockChain() *BlockChain  {
+func NewBlockChain(address string) *BlockChain  {
 	//創建一個創世區塊，並作爲第一個區塊添加到區塊鏈中
 	/*genesisBlock := GenesisBlock()
 	return &BlockChain{
@@ -46,7 +46,7 @@ func NewBlockChain() *BlockChain  {
 				log.Panic("創建bucket(blockBucket)失敗")
 			}
 			//創建一個創世區塊，並作爲第一個區塊添加到區塊鏈中
-			genesisBlock := GenesisBlock()
+			genesisBlock := GenesisBlock(address)
 
 			//寫數據
 			//hash作爲key，block字節流作爲value
@@ -65,12 +65,13 @@ func NewBlockChain() *BlockChain  {
 }
 
 //創世快
-func GenesisBlock() *Block {
-	return NewBlock("這是一個創世區塊",[]byte{})
+func GenesisBlock(address string) *Block {
+	coinBase:=NewCoinBaseTX(address,"這是一個創世區塊")
+	return NewBlock([]*Transaction{coinBase},[]byte{})
 }
 
 //添加區塊
-func (bc *BlockChain)AddBlock(data string)  {
+func (bc *BlockChain)AddBlock(txs []*Transaction)  {
 	//如何獲取前區塊哈希
 	db:=bc.db //区块链数据库
 	lasthash := bc.tail //最后一个区块的哈希
@@ -84,7 +85,7 @@ func (bc *BlockChain)AddBlock(data string)  {
 		}
 
 		//創建新的區塊
-		block := NewBlock(data, lasthash)
+		block := NewBlock(txs, lasthash)
 
 		//添加到區塊鏈數組中
 		//hash作爲key，block字節流作爲value

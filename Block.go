@@ -27,7 +27,9 @@ type Block struct {
 	//a、當前區塊哈希
 	Hash []byte
 	//b、區塊數據
-	Data []byte
+	//Data []byte
+	//真實的交易數組
+	Transactions []*Transaction
 }
 
 //實現一個輔助函數，功能是將uint64轉成[]byte
@@ -41,7 +43,7 @@ func Uint64ToByte(num uint64) []byte {
 }
 
 //創建區塊
-func NewBlock(data string, preBlockHash []byte) *Block {
+func NewBlock(txs []*Transaction, preBlockHash []byte) *Block {
 	block := Block{
 		Version:    00,
 		PrvHash:    preBlockHash,
@@ -50,7 +52,8 @@ func NewBlock(data string, preBlockHash []byte) *Block {
 		Difficulty: 0,
 		Nonce:      0,
 		Hash:       []byte{},
-		Data:       []byte(data),
+		//Data:       []byte(data),
+		Transactions:txs,
 	}
 	//block.SetHash()
 	//创建一个pow对象
@@ -127,3 +130,9 @@ func Deserialize(data []byte) Block {
 	block.Hash = hash[:]
 
 }*/
+
+	//模擬MerkelRoot,只是對交易數據進行簡單的拼接，而不做二叉樹處理
+func (block *Block)MakeMerkelRoot() []byte {
+	return []byte{}
+
+}
